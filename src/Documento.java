@@ -41,11 +41,14 @@ public class Documento {
 
     // ****** Atributos y metodos estaticos ******
 
-    private static List<Documento> documentos = new ArrayList();
+    private static List<Documento> documentos = new ArrayList<>();
     private static String[] encabezados;
 
+    public static List<Documento> getDocumentos() {
+        return documentos;
+    }
 
-    public static int getTamaño(){
+    public static int getTamaño() {
         return documentos.size();
     }
 
@@ -149,31 +152,46 @@ public class Documento {
         ordenarRapido(pivote + 1, fin, criterio); // ordenar los mayores a la posicion PIVOTE
     }
 
-
     public static void ordenarShellSort(int criterio) {
-        // Determinamos un valor de "h" inicial, que será el tamaño de la lista dividido entre 2
+        // Determinamos un valor de "h" inicial, que será el tamaño de la lista dividido
+        // entre 2
         int h = 1;
         while (h < documentos.size() / 3) {
             h = 3 * h + 1; // Genera los incrementos de acuerdo con la secuencia de Shell
         }
-    
+
         // Comenzamos con el valor más grande de h y lo vamos reduciendo
         while (h >= 1) {
             for (int i = h; i < documentos.size(); i++) {
                 Documento actual = documentos.get(i);
                 int j = i;
-    
+
                 // Desplazamiento de los elementos en la secuencia de h
                 while (j >= h && esMayor(documentos.get(j - h), actual, criterio)) {
-                    documentos.set(j, documentos.get(j - h));  // Mover el elemento a la posición de h
+                    documentos.set(j, documentos.get(j - h)); // Mover el elemento a la posición de h
                     j -= h;
                 }
                 // Insertar el actual en su posición correcta
                 documentos.set(j, actual);
             }
-    
+
             h /= 3; // Reducir el valor de h
         }
+    }
+
+    public static void mostrar(JTable tbl, List<Documento> lista) {
+        String[][] datos = new String[lista.size()][encabezados.length];
+        int fila = 0;
+        for (Documento d : lista) {
+            datos[fila][0] = d.getApellido1();
+            datos[fila][1] = d.getApellido2();
+            datos[fila][2] = d.getNombre();
+            datos[fila][3] = d.getDocumento();
+            fila++;
+        }
+        DefaultTableModel dtm = new DefaultTableModel(datos, encabezados);
+        tbl.setModel(dtm);
+
     }
 
 }

@@ -13,6 +13,7 @@ import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class FrmOrdenamiento extends JFrame {
 
@@ -134,8 +135,28 @@ public class FrmOrdenamiento extends JFrame {
 
     }
 
-    private void btnBuscar(ActionEvent evt) {
+   
 
+    private void btnBuscar(ActionEvent evt) {
+    String texto = txtBuscar.getText().trim();
+
+    if (texto.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Ingrese un texto para buscar");
+        return;
     }
+
+    Util.iniciarCronometro();
+
+    // Construir árbol desde documentos actuales
+    ArbolBusqueda arbol = new ArbolBusqueda(Documento.getDocumentos());
+
+    // Buscar coincidencias parciales
+    List<Documento> resultados = arbol.buscarCoincidencias(texto);
+
+    txtTiempo.setText(Util.getTextoTiempoCronometro());
+
+    // Mostrar resultados
+    Documento.mostrar(tblDocumentos, resultados);
+}
 
 }
